@@ -13,7 +13,9 @@ use linux::display_size as display_size_impl;
 #[cfg(target_os = "macos")]
 use macos::display_size as display_size_impl;
 #[cfg(target_os = "windows")]
-use windows::display_size as display_size_impl;
+use windows::get_origin_screen_resolution as origin_display_size_impl;
+#[cfg(target_os = "windows")]
+use windows::get_scaled_screen_resolution as display_size_impl;
 
 #[derive(Debug, Error)]
 pub enum ScreenSizeError {
@@ -31,6 +33,11 @@ pub enum ScreenSizeError {
 /// ## MacOS
 /// Will panic if there's no monitor available
 #[inline(always)]
-pub fn get_primary_screen_size() -> Result<(u64, u64), ScreenSizeError> {
+pub fn get_primary_screen_size() -> Result<(u32, u32), ScreenSizeError> {
     display_size_impl()
+}
+
+#[inline(always)]
+pub fn get_origin_primary_screen_size() -> Result<(u32, u32), ScreenSizeError> {
+    origin_display_size_impl()
 }
